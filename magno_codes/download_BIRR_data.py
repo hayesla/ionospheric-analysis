@@ -1,10 +1,9 @@
 import urllib
 from pathlib import Path
-import utils
 from sunpy.time import parse_time
 import sys
 sys.path.append('..')
-
+import utils
 
 def find_files(date):
     """
@@ -62,9 +61,9 @@ def search_data_and_download(date, path=None):
         filename = Path(path).joinpath(files[0].split('/')[-1])
     else:
         filename = files[0].split('/')[-1]
-
-    urllib.request.urlretrieve(files[0], filename=filename)
-    if Path(filename).exists():
-        return 'files downloaded'
-    else:
+    try:
+        urllib.request.urlretrieve(files[0], filename=filename)
+        if Path(filename).exists():
+            return 'files downloaded'
+    except:
         return 'error in download'
