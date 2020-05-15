@@ -141,3 +141,28 @@ def plot_test(i):
 # 		print(i)
 
 
+def save_x_class():
+	goes_flares = pd.read_csv('goes_flare_list_m5.csv')
+	goes_flares['class_short'] = [x[0] for x in goes_flares['goes_class']]
+	goes_flares['peak_times_hours'] = [x.hour for x in pd.to_datetime(goes_flares['peak_time'])]
+
+	daytime_flares = goes_flares[(goes_flares['peak_times_hours']>8) & (goes_flares['peak_times_hours']<20)]
+	x_flares = daytime_flares[daytime_flares['class_short']=='X']
+
+	files_downloaded = glob.glob('./magno_files/*txt')
+
+	# check which flares have downloaded files
+	index = []
+	for i in range(len(x_flares)):
+		tt = parse_time(x_flares['event_date'].iloc[i]).strftime('%Y%m%d')
+		ind = False
+		for f in files_downloaded:
+			if tt in f:
+				ind=True
+				continue
+		index.append(ind)
+
+
+	final_flares = x_flares[index]
+	final_flares.reset_index(drop=True, inplace=True)
+	final_flares.to_csv('x_class_w_files.csv', index_label=True)
