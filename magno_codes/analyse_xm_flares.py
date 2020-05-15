@@ -40,6 +40,7 @@ def download_the_data():
 
 
 		logg.append(log)
+		return log
 
 files_downloaded = glob.glob('./magno_files/*txt')
 
@@ -48,7 +49,7 @@ index = []
 for i in range(len(daytime_flares)):
 	tt = parse_time(daytime_flares['event_date'].iloc[i]).strftime('%Y%m%d')
 	ind = False
-	for f in files:
+	for f in files_downloaded:
 		if tt in f:
 			ind=True
 			continue
@@ -133,10 +134,10 @@ def plot_test(i):
 	plt.close()
 
 
-for i in range(len(events_to_download)):
-	try:
-		plot_test(i)
-	except:
-		print(i)
+# for i in range(len(events_to_download)):
+# 	try:
+# 		plot_test(i)
+# 	except:
+# 		print(i)
 
 
