@@ -7,8 +7,8 @@ import utils
 
 def find_files(date):
     """
-    Function to list available files for Birr magnetometer "data". The filename
-    depends on the start seconds of the "data" which can change for certain days
+    Function to list available files for Birr magnetometer data. The filename
+    depends on the start seconds of the data which can change for certain days
     hence actually finding the file name is required as it cannot necessarily be
     predicted
 
@@ -21,7 +21,7 @@ def find_files(date):
     -------
     list of files
     """
-    base_url = "http://"data".rosseobservatory.ie/"data"/"
+    base_url = "http://data.rosseobservatory.ie/data/"
 
     date_base_url = base_url + date.strftime("%Y/%m/%d/magnetometer/txt/")
 
@@ -32,12 +32,12 @@ def find_files(date):
 
 def search_data_and_download(date, path=None):
     """
-    Function to search for and download magnetometer "data" from Birr
+    Function to search for and download magnetometer data from Birr
 
     Parameters
     ----------
     date : ~str
-        date to parse and search for "data", should be in form acceptable
+        date to parse and search for data, should be in form acceptable
         to `sunpy.time.parse_time()`
 
     path : ~str, optional
@@ -46,7 +46,7 @@ def search_data_and_download(date, path=None):
     Returns
     -------
     check : ~str`
-        returns a string to inform if "data" has downloaded or not
+        returns a string to inform if data has downloaded or not
 
     """
     date = parse_time(date)
