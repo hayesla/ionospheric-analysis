@@ -45,7 +45,7 @@ def search_data_and_download(date, path=None):
 
     Returns
     -------
-    check : ~str`
+    check : `~str`
         returns a string to inform if data has downloaded or not
 
     """
