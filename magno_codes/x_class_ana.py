@@ -17,8 +17,10 @@ x_flares = pd.read_csv("x_class_w_files.csv")
 def euve_to_series(file):
 	data = pd.read_csv(file, comment=';', names=['date', 'time', 'count', 'flag'], delim_whitespace=True)
 	tt = data['date'] + ' ' +  data['time']
-	t_index = [parse_time(x) for x in tt]
-	return pd.Series(data['count'].value, index=t_index)
+	t_index = [datetime.datetime.strptime(x, '%d-%b-%Y %H:%M:%S.%f') for x in tt]
+	ser = pd.Series(data['count'].values, index=t_index)
+	ser = ser.replace(-99999.0, np.nan)
+	return ser
 
 
 i = 0
