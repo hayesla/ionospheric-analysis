@@ -36,9 +36,3 @@ def sid_to_series(file):
 	return ser
 
 
-tstart = "2013-05-22 12:00"
-tend = "2013-10-25 15:00"
-
-file_euve = glob.glob(euve_data_dir + parse_time(x_flares.iloc[i]['event_date']).strftime("*%Y%m%d.txt"))[0]
-file_magno = glob.glob(magno_data_dir + parse_time(x_flares.iloc[i]['event_date']).strftime("*%Y%m%d*.txt"))[0]
-goes_file = glob.glob(goes_data_dir + parse_time(x_flares.iloc[i]['event_date']).strftime("go15%Y%m%d.fits"))[0]
