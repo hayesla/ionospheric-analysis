@@ -56,11 +56,13 @@ def search_data_and_download(date, path=None):
         return "no files found"
     else:
         print("downloading now..")
-
+    
     if path is not None:
         filename = Path(path).joinpath(files[0].split("/")[-1])
     else:
         filename = files[0].split("/")[-1]
+    if filename.exists():
+        return "file already exists!"
     try:
         urllib.request.urlretrieve(files[0], filename=filename)
         if Path(filename).exists():

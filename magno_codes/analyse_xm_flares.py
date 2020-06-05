@@ -40,7 +40,7 @@ def download_the_data():
 
 
 		logg.append(log)
-		return log
+	return log
 
 files_downloaded = glob.glob("./magno_files/*txt")
 
