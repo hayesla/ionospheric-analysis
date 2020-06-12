@@ -16,3 +16,13 @@ def download_euvs():
 			urllib.request.urlretrieve(url, save_dir + url.split('/')[-1])
 		except:
 			print(url)
+
+def download_euve_date(date):
+	base_url = "https://hesperia.gsfc.nasa.gov/goes_euv/euve/"
+
+	url = parse_time(date).strftime(base_url+"%Y/g15_euve_%Y%m%d.txt")
+
+	try:
+		urllib.request.urlretrieve(url, save_dir + url.split('/')[-1])
+	except:
+		print("didnt work", url)

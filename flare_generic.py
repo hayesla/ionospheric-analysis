@@ -5,17 +5,27 @@ from sunpy import timeseries as ts
 from sunpy.time import parse_time
 from read_files import euve_to_series, mag_to_series, sid_to_series
 
-tstart = '2014-06-10 11:30'
-tend = '2014-06-10 13:20'
+# tstart = '2017-09-10 15:00'
+# tend = '2017-09-10 22:00'
+
+tstart = '2015-11-04 08:00'
+tend = '2015-11-04 20:00'
 
 euve_data = euve_to_series("./magno_codes/euve_data/g15_euve_{:s}.txt".format(parse_time(tstart).strftime('%Y%m%d')))
 goes_data = ts.TimeSeries("/Users/laurahayes/QPP/stats_study/TEBBS/goes_rawdata/go15{:s}.fits".format(parse_time(tstart).strftime('%Y%m%d')))
 magno_data = mag_to_series("./magno_codes/magno_files/birr_mag_{:s}_000001.txt".format(parse_time(tstart).strftime('%Y%m%d')))
+sid_data = sid_to_series("./vlf_codes/vlf_files/BIR_sid_{:s}_000000.txt".format(parse_time(tstart).strftime('%Y%m%d')))
 
-
-euve_flare = euve_data.truncate(tstart, tend)
+#euve_flare = euve_data.truncate(tstart, tend)
 bx, by, bz = magno_data[0].truncate(tstart, tend), magno_data[1].truncate(tstart, tend), magno_data[2].truncate(tstart, tend)
 gl, gs = goes_data.to_dataframe().truncate(tstart, tend)['xrsb'], goes_data.to_dataframe().truncate(tstart, tend)['xrsa']
+euve_data = euve_data.truncate(tstart, tend)
+
+h = np.sqrt(np.array(bx)**2 + np.array(by)**2)
+H = pd.Series(h, index=bx.index)
+
+dd = np.arctan(by/bx)*(180/np.pi)
+D = pd.Series(dd, index=bx.index)
 
 def norm(x):
 	return (x - np.min(x))/(np.max(x) - np.min(x))
@@ -34,7 +44,7 @@ def overall_plot():
 
 
 	ax02 = ax[0].twinx()
-	ax02.plot(euve2, color='k', label=r'Ly$\alpha$', drawstyle='steps-mid')
+	ax02.plot(sid_data, color='k', label=r'Ly$\alpha$', drawstyle='steps-mid')
 	ax02.set_ylabel('Flux (Wm$^{-2}$)')
 	ax[0].set_title('a. Flare emission', loc='left')
 	ax[0].set_ylabel("Flux (Wm$^{-2}$)", color='r')
@@ -49,7 +59,7 @@ def overall_plot():
 	ax[1].set_title('b. Magnetometer data', loc='left')
 	ax[1].set_ylabel("Normalized components")
 
-	ax[2].plot(sid_flare, label='VLF', color='grey')
+	ax[2].plot(euve_data, label='VLF', color='grey')
 	ax[2].set_ylabel('VLF amplitude (Volts)')
 
 

@@ -5,6 +5,7 @@ import sys
 sys.path.append("..")
 import utils
 
+
 def find_files(date):
     """
     Function to list available files for Birr magnetometer data. The filename
@@ -60,7 +61,8 @@ def search_data_and_download(date, path=None):
     if path is not None:
         filename = Path(path).joinpath(files[0].split("/")[-1])
     else:
-        filename = files[0].split("/")[-1]
+        filename = Path(files[0].split("/")[-1])
+
     if filename.exists():
         return "file already exists!"
     try:
