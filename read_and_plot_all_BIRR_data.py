@@ -5,6 +5,8 @@ import glob
 import datetime
 from matplotlib import dates
 from astropy import units as u
+import time 
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 # all the files.
 files = glob.glob("/Users/laurahayes/ionospheric_work/vlf_data_all_birr/sid_alll/*.csv")
@@ -74,7 +76,8 @@ def read_files(files):
 			data = pd.read_csv(f, comment='#', names=["time", "volts"])
 			df.append(data)
 		new_df = pd.concat(df)
-		new_df.reset_index(drop=True)
+		new_df = new_df.drop_duplicates(subset='time')
+		new_df.reset_index(drop=True, inplace=True)
 		return new_df
 
 def make_empty_df(date):
@@ -92,8 +95,81 @@ def make_empty_df(date):
 
 	"""
 	dti = pd.date_range(date.strftime('%Y-%m-%d'), periods=17280, freq='5S')
+	empty_arr = np.empty(len(dti))
+	empty_arr[:] = np.nan
 	df = pd.DataFrame({'time':np.array(dti.astype('str')), 'volts':empty_arr})
 	return df
 
 
+def make_all(date):
+
+	empty_df = make_empty_df(date)
+
+	files = find_files_by_date(date)
+	if len(files) == 0:
+		return empty_df
+	else:
+		df_data = read_files(files)
+		df_merge = pd.merge(empty_df, df_data, on='time', how='left').drop_duplicates('time')
+		return df_merge.rename(columns={'volts_y':'volts'}).fillna(method='ffill')
+
+
+def make_full_arr():
+	t1 = time.time()
+	full_arr = []
+	for i in range(0, len(all_days)):
+		full_arr.append(make_all(all_days[i])['volts'].values)
+	full_arr = np.array(full_arr)
+	t2 = time.time()
+	print(t2 - t1)
+
+	full_array = np.stack(np.array(full_arr))
+	np.save('full_array_data_birr', full_array)
+
+def plot_all_data(cmap=plt.cm.viridis, filename='test_days.png'):
+
+	plt.rcParams['font.family'] = 'Helvetica'
+	full_array = np.load('full_array_data_birr.npy')
+	#cmap = plt.cm.viridis
+	cmap_colors = cmap(np.linspace(0,1,100))
+	cmap.set_bad(cmap_colors[0])
+
+
+	xaxis = parse_time(make_empty_df(all_days[0])['time']).datetime
+	yaxis = all_days
+
+	fig, ax = plt.subplots(figsize=(9, 8))
+	im = ax.imshow(full_array, origin='lower', aspect='auto', cmap=cmap, 
+			   extent=[dates.date2num(xaxis[0]), dates.date2num(xaxis[-1]),
+			   		   dates.date2num(yaxis[0]), dates.date2num(yaxis[-1])])
+
+	ax.xaxis_date()
+	ax.yaxis_date()
+
+	ax.xaxis.set_major_locator(dates.HourLocator(interval=3))
+	ax.xaxis.set_minor_locator(dates.HourLocator(interval=1))
+
+	ax.yaxis.set_major_locator(dates.MonthLocator(interval=6))
+	ax.yaxis.set_minor_locator(dates.MonthLocator(interval=1))
+
+	ax.xaxis.set_major_formatter(dates.DateFormatter('%H:%M'))
+	ax.yaxis.set_major_formatter(dates.DateFormatter('%Y-%b'))
+	
+	ax.set_xlabel('Time of day')
+	ax.set_ylabel('Date')
+
+
+
+	divider = make_axes_locatable(ax)
+	cax = divider.append_axes("right", size="2%", pad=0.05)
+	fig.add_axes(cax)
+	cbar = fig.colorbar(im, cax=cax, orientation="vertical")
+	cbar.set_label('Volts')
+
+	plt.tight_layout()
+
+
+
+	plt.savefig(filename, dpi=200)
+	plt.close()
 
