@@ -70,8 +70,8 @@ def check_urls_bas(transmitter='NAA'):
     return url_list, failed
 
 
-list_of_files = check_urls_bas(transmitter='DHO')
-worked, failed = list_of_files
+# list_of_files = check_urls_bas(transmitter='DHO')
+# worked, failed = list_of_files
 
 
 from parfive import Downloader
@@ -112,6 +112,73 @@ def read_vlf_data(file, tt):
 
 goes_data_dir = "/Users/laurahayes/QPP/stats_study/TEBBS/goes_rawdata/"
 save_dir = "/Users/laurahayes/ionospheric_work/ionospheric-analysis/vlf_codes/vlf_plots/"
+
+def get_flare_amps(i):
+    """
+    Function to return the GOES amp and the VLF amp
+
+    """
+
+    all_data = []
+    for i in range(62, len(events_to_download)):
+        tt = parse_time(events_to_download[i]).strftime("%Y%m%d")
+        files_vlf = glob.glob("./vlf_bas_files/{:s}{:s}*".format("NAA", tt))
+        if len(files_vlf)>0:
+            print(i, 'out of ', len(events_to_download))
+            # print("No VLF data")
+
+
+
+        # goes_file = goes_data_dir + "go15" + tt + ".fits"
+        # if not Path(goes_file).exists():
+        #     print("No goes data")
+
+        # goes_data = ts.TimeSeries(goes_file)
+        # gl = goes_data.data["xrsb"]
+        # gs = goes_data.data["xrsa"]
+            flares_ind = np.where(daytime_flares["event_date"].isin([events_to_download[i]])==True)[0]
+            flares = daytime_flares.iloc[flares_ind]
+
+            vlf_amp, vlf_phase = read_vlf_data(files_vlf[0], tt)
+
+            day_date = parse_time(vlf_amp.index[0]).strftime('%Y-%m-%d')
+            vlf_amp.sort_index(inplace=True)
+            average_vlf_amp = vlf_amp.truncate(day_date + ' 09:00', day_date + ' 17:00')
+            average_vlf_amp_mean = average_vlf_amp.mean()
+
+            df_test = {}
+            for f in range(len(flares)):
+                amp_flare = vlf_amp.truncate(flares.iloc[f]['start_time'], flares.iloc[f]['peak_time'])
+                amp_max = amp_flare.max()
+                if len(amp_flare)>0:
+                    amp_diff = amp_flare[-1] - amp_flare[0]
+                else:
+                    amp_diff = np.nan
+                df_test['amp_flare'] = amp_max
+                df_test['amp_diff'] = amp_diff
+                df_test['amp_average'] = average_vlf_amp_mean
+                df_test['flare'] = flares.iloc[f]['goes_class'] 
+                df_test['start_time'] = flares.iloc[f]['start_time']
+                df_test['peak_time'] = flares.iloc[f]['peak_time']
+
+
+
+        all_data.append(df_test)
+        all_data_vlf = pd.DataFrame(all_data)
+
+def get_goes_flux(x):
+
+        if x[0] == 'C':
+            gc = float(x[1:])*(1e-6)
+        elif x[0] == 'M':
+            gc = float(x[1:])*(1e-5)    
+        elif x[0] == 'X':
+            gc = float(x[1:])*(1e-4)    
+        else:
+            print ('somethings wrong')
+        return gc
+
+
 def plot_flares(i, transmitter='NRK'):
 
     tt = parse_time(events_to_download[i]).strftime("%Y%m%d")

@@ -6,13 +6,29 @@ from sunpy.time import parse_time
 from matplotlib import dates
 import glob
 import numpy as np 
+import sys
+sys.path.append("..")
+from goes_event_list import get_goes_event_list 
+
+
+def get_flarelist(goes_class_filter, filename):
+    """
+    getting flare list with flares greater than specifed flare class.
+    Saved as a CSV file filename
+    """ 
+    t_start = "2012-08-22 00:00"
+    t_end = "2018-04-20 00:00"
+    get_goes_event_list(t_start, t_end, filename=Path.cwd().joinpath(filename), goes_class_filter=goes_class_filter)
+
+# get_flarelist('C1', filename='goes_c_flares_birr_dates.csv')
 
 goes_data_dir = "/Users/laurahayes/QPP/stats_study/TEBBS/goes_rawdata/"
 vlf_data_dir = "/Users/laurahayes/ionospheric_work/vlf_data_all_birr/sid_alll/"
 save_dir = "/Users/laurahayes/ionospheric_work/ionospheric-analysis/vlf_codes/vlf_plots_birr/"
 
 
-goes_flares = pd.read_csv("goes_sc_flares_xmc5.csv")
+# goes_flares = pd.read_csv("goes_sc_flares_xmc5.csv")
+goes_flares = pd.read_csv("goes_c_flares_birr_dates.csv")
 goes_flares = goes_flares.drop_duplicates(subset="start_time") 
 
 goes_flares["peak_times_hours"] = [x.hour for x in pd.to_datetime(goes_flares["peak_time"])]
@@ -48,6 +64,16 @@ def read_files(files):
         new_df = new_df.drop_duplicates(subset='time')
         new_df.reset_index(drop=True, inplace=True)
         return new_df
+
+
+def make_vlf_flare_list():
+    vlf_days = []
+    for i in range(len(days_to_plot)):
+        tt = parse_time(days_to_plot[i]).strftime("%Y%m%d")
+        files_vlf = glob.glob(vlf_data_dir + tt + '*.csv')
+        if len(files_vlf) != 0:
+            vlf_days.append(days_to_plot[i])
+
 
 def plot(i):
 
