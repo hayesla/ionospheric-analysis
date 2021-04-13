@@ -5,7 +5,9 @@ import cartopy.feature as cfeature
 import datetime
 import numpy as np 
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
+import seaborn as sns
 
+sns.set_context("paper", font_scale=1.3)
 # projection=ccrs.PlateCarree()
 # #hacked_proj = projection
 # projection._threshold /= 20.
@@ -25,7 +27,7 @@ class hacked_miller(ccrs.Miller):
 
 projection = hacked_miller()
 
-fig = plt.figure(figsize=(10, 5))
+fig = plt.figure(figsize=(10, 6))
 ax = plt.axes(projection=projection)
 
 # setting up tick labels etc
@@ -38,7 +40,7 @@ ax.yaxis.set_major_formatter(lat_formatter)
 ax.gridlines()
 
 # add in features of interest on map
-ax.set_extent((-95, 20, 20, 65), crs=ccrs.PlateCarree())
+ax.set_extent((-90, 10, 30, 65), crs=ccrs.PlateCarree())
 ax.coastlines(resolution="50m")
 ax.add_feature(cfeature.BORDERS, lw=0.5, color="grey")
 ax.add_feature(cfeature.LAND, facecolor="tan")
