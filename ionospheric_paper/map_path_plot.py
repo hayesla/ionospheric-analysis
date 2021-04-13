@@ -68,4 +68,5 @@ ax.plot([naa_lon, birr_lon], [naa_lat, birr_lat],
 ax.set_xlabel("Longitude")
 ax.set_ylabel("Latitude")
 plt.tight_layout()
-plt.show()
+plt.savefig("map_of_path.png", dpi=200)
+plt.close()
