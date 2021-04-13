@@ -15,7 +15,8 @@ fig, ax = plt.subplots(figsize=(6, 4))
 
 m = Basemap(projection='cyl',llcrnrlat=-30,urcrnrlat=90,\
              llcrnrlon=-120,urcrnrlon=80,resolution='c')
-date = parse_time('2015-11-04 13:30').datetime
+# date = parse_time('2015-11-04 13:30').datetime
+date = parse_time('2020-11-29 12:00').datetime
 
 sun = SkyCoord(0*u.deg, 0*u.deg, 0*u.AU, 
 				obstime=date, frame=frames.HeliographicStonyhurst )    
@@ -39,6 +40,8 @@ vlf_color='tab:blue'
 
 naa_lat, naa_lon = 44.644506, -67.284565
 birr_lon, birr_lat = -7.9, 53
+
+esk_lon, esk_lat = -3.10, 55.16
 # rht_lat, rht_lon = 41.720, -111.822
 # nml_lat, nml_lon = 46.365987, -98.335667
 # nlk_lat, nlk_lon = 48.203633,  -121.916828
@@ -49,10 +52,11 @@ date = parse_time('2015-11-04 13:30').datetime
 
 m.plot(lon, lat, color='yellow', marker='o', markeredgecolor='k', ms=10)
 m.plot(naa_lon, naa_lat, color=vlf_color, marker='o',ms=5)
-m.plot(birr_lon, birr_lat, color=mag_color, marker='o', ms=5)
+# m.plot(birr_lon, birr_lat, color=mag_color, marker='o', ms=5)
+m.plot(esk_lon, esk_lat, color=mag_color, marker='o', ms=5)
 # m.plot(nlk_lon, nlk_lat, color='b', marker='x')
-m.plot(birr_lon, birr_lat, color=vlf_color, marker='o', ms=5)
-m.drawgreatcircle(naa_lon,naa_lat,birr_lon,birr_lat,linewidth=2,color=vlf_color)
+# m.plot(birr_lon, birr_lat, color=vlf_color, marker='o', ms=5)
+m.drawgreatcircle(naa_lon,naa_lat,esk_lon,esk_lat,linewidth=2,color=vlf_color)
 # m.drawgreatcircle(nlk_lon,nlk_lat,rht_lon,rht_lat,linewidth=2,color='b')
 # m.drawgreatcircle(nml_lon,nml_lat,rht_lon,rht_lat,linewidth=2,color='b')
 
@@ -68,7 +72,7 @@ plt.title(date.strftime('%Y-%m-%d %H:%M'))
 
 plt.tight_layout()
 
-plt.savefig('test_map.png', dpi=200)
+plt.savefig('test_map2.png', dpi=200)
 plt.close()
 
 

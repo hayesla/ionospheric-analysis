@@ -67,13 +67,16 @@ def read_files(files):
 
 
 def make_vlf_flare_list():
+    """
+    Get the days for which VLF files are available.
+    """
     vlf_days = []
     for i in range(len(days_to_plot)):
         tt = parse_time(days_to_plot[i]).strftime("%Y%m%d")
         files_vlf = glob.glob(vlf_data_dir + tt + '*.csv')
         if len(files_vlf) != 0:
             vlf_days.append(days_to_plot[i])
-
+    return vlf_days
 
 def plot(i):
 
