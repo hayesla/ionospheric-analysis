@@ -78,8 +78,8 @@ ax2.set_xlabel("Time (UT) {:s}".format(gl.index[100].strftime("%Y-%m-%d")))
 for a in (ax1, ax2):
 	a.axvspan("2015-10-02 07:00", "2015-10-02 09:30", color="grey", alpha=0.5, zorder=3)
 	a.axvspan("2015-10-02 19:00", "2015-10-02 22:00", color="grey", alpha=0.5, zorder=3)
-ax1.text(0.01, 0.91, "a", transform=ax1.transAxes)
-ax2.text(0.01, 0.95, "b", transform=ax2.transAxes)
+ax1.text(0.01, 0.91, "a. Solar X-ray Observations", transform=ax1.transAxes)
+ax2.text(0.01, 0.95, "b. Ionospheric VLF Observations", transform=ax2.transAxes)
 
 
 plt.tight_layout()
