@@ -30,7 +30,7 @@ lon, lat = coords.lon.value, coords.lat.value
 
 #m.drawlsmask()
 m.fillcontinents()
-m.drawcoastlines()
+# m.drawcoastlines()
 m.drawcountries()
 #m.drawstates()
 
