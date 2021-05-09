@@ -7,7 +7,7 @@ from matplotlib import dates
 from astropy import units as u
 import time 
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-
+from sunpy.time import parse_time
 # all the files.
 files = glob.glob("/Users/laurahayes/ionospheric_work/vlf_data_all_birr/sid_alll/*.csv")
 files.sort()
@@ -143,6 +143,9 @@ def plot_all_data(cmap=plt.cm.viridis, filename='test_days.png'):
 			   extent=[dates.date2num(xaxis[0]), dates.date2num(xaxis[-1]),
 			   		   dates.date2num(yaxis[0]), dates.date2num(yaxis[-1])])
 
+	ax.axvline(xaxis[10081], color="w", ls="dashed", lw=0.5)
+	ax.axvline(xaxis[11521], color="w", ls="dashed", lw=0.5)
+
 	ax.xaxis_date()
 	ax.yaxis_date()
 
@@ -172,4 +175,38 @@ def plot_all_data(cmap=plt.cm.viridis, filename='test_days.png'):
 
 	plt.savefig(filename, dpi=200)
 	plt.close()
+
+def plot_avg():
+	cmap = plt.cm.viridis
+	plt.rcParams['font.family'] = 'Helvetica'
+	full_array = np.load('full_array_data_birr.npy')
+	#cmap = plt.cm.viridis
+	cmap_colors = cmap(np.linspace(0,1,100))
+	cmap.set_bad(cmap_colors[0])
+
+
+	xaxis = parse_time(make_empty_df(all_days[0])['time']).datetime
+	yaxis = np.array(all_days)
+
+	to_plot = np.mean(full_array[:, 10081:11521], axis=1)
+
+	fig, ax = plt.subplots(figsize=(10, 5))
+	#ax.scatter(yaxis[to_plot>-4.8], to_plot[to_plot>-4.8], marker='.', alpha=0.5)
+	ax.scatter(yaxis, to_plot, marker='.', alpha=0.5, c=to_plot)
+	ax.xaxis.set_major_locator(dates.MonthLocator(interval=6))
+	ax.xaxis.set_minor_locator(dates.MonthLocator(interval=1))
+	ax.set_xlabel("Time")
+	ax.set_ylabel("VLF amplitude (volts)")
+	ax.tick_params(which="both", direction="in")
+	plt.tight_layout()
+	plt.savefig("yearly_variations.png", dpi=200)
+
+def kp_index():
+
+	kp_data = np.loadtxt("val_kindex.txt")
+	t1 = datetime.datetime(2013,1,2,0,0,0)
+	kp_times = [t1]
+	for i in range(len(kp_data)):
+		t1 = t1 + datetime.timedelta(hours=3)
+		kp_times.append(t1)
 
