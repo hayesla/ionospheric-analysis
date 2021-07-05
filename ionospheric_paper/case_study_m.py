@@ -110,7 +110,7 @@ ax[1].plot(rhe_times, rhe_50100, label="50-100keV")
 ax[1].set_yscale("log")
 
 
-ax[2].plot(sid_data, color="k")
+ax[2].plot(calc_amp(sid_data), color="k")
 
 
 def plot_atten_states(aa, y_val, color = 'r'):

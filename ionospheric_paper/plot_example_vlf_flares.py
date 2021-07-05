@@ -9,11 +9,18 @@ sys.path.append("..")
 from read_files import sid_to_series
 from matplotlib import gridspec
 import matplotlib
+import seaborn as sns
+sns.set_context("paper", font_scale=1.2)
 
 
-"""
+"""------------------------------
 Script for figure 2 of VLF paper
-"""
+
+
+An example from 2015-10-02 with
+lots of flares.
+
+------------------------------"""
 
 matplotlib.rcParams['xtick.direction'] = "in"
 matplotlib.rcParams['ytick.direction'] = "in"
@@ -54,8 +61,8 @@ def make_paper_plot(sid_data, sid_data_quiet, amp=False):
 	grids = gridspec.GridSpec(2, 1, height_ratios=[1, 2]) 
 	ax1 = plt.subplot(grids[0])
 	ax2 = plt.subplot(grids[1], sharex=ax1)
-	ax1.plot(gl, color="r", label="1-8 $\mathrm{\AA}$")
-	ax1.plot(gs, color="b", label="0.5-4 $\mathrm{\AA}$")
+	ax1.plot(gl, color="tab:red", label="1-8 $\mathrm{\AA}$")
+	ax1.plot(gs, color="tab:blue", label="0.5-4 $\mathrm{\AA}$")
 	ax1.set_yscale("log")
 	ax1.set_ylim(1e-8, 4e-4)
 	ax1.set_ylabel("Flux Wm$^{-2}$")
@@ -86,7 +93,7 @@ def make_paper_plot(sid_data, sid_data_quiet, amp=False):
 		ax2.set_ylim(-5, 5)
 		ax2.set_ylabel("VLF Amplitude (volts)")
 
-	ax2.set_xlabel("Time (UT) {:s}".format(gl.index[100].strftime("%Y-%m-%d")))
+	ax2.set_xlabel("Time {:s} (UT)".format(gl.index[100].strftime("%Y-%m-%d")))
 	for a in (ax1, ax2):
 		a.axvspan("2015-10-02 07:00", "2015-10-02 09:30", color="grey", alpha=0.5, zorder=3)
 		a.axvspan("2015-10-02 19:00", "2015-10-02 22:00", color="grey", alpha=0.5, zorder=3)
@@ -97,9 +104,9 @@ def make_paper_plot(sid_data, sid_data_quiet, amp=False):
 	plt.tight_layout()
 	plt.subplots_adjust(hspace=0.01)
 	if amp:
-		plt.savefig("./paper_plots/example_active_day.png", dpi=200)
+		plt.savefig("./final_paper_plots/example_active_day.png", dpi=300, bbox_inches="tight")
 	else:
-		plt.savefig("./paper_plots/example_active_day2.png", dpi=200)
+		plt.savefig("./final_paper_plots/example_active_day2.png", dpi=300, bbox_inches="tight")
 	plt.close()
 
 # make plots 

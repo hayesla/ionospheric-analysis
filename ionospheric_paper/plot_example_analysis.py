@@ -7,12 +7,19 @@ from sunpy import timeseries as ts
 import datetime
 from matplotlib import dates
 from scipy.signal import savgol_filter
-
-plt.rcParams['font.family'] = 'Helvetica'
+import matplotlib
+import seaborn as sns 
+sns.set_context("paper", font_scale=1.2)
 
 """
 Script for figure 3 of VLF paper
 """
+
+matplotlib.rcParams['xtick.direction'] = "in"
+matplotlib.rcParams['ytick.direction'] = "in"
+matplotlib.rcParams['xtick.minor.visible'] = True
+matplotlib.rcParams['ytick.minor.visible'] = True
+plt.rcParams['font.family'] = 'Helvetica'
 
 
 vlf_flares = pd.read_csv("final_paper_vlf_flares2.csv")
@@ -64,8 +71,8 @@ def plot_flare(i):
     gs_flare = gs.truncate(vlf_flares["event_starttime"].iloc[i], vlf_flares["event_endtime"].iloc[i])
 
     fig, ax = plt.subplots(2, figsize=(8,6), sharex=True)
-    ax[0].plot(gl, color="r", label="1-8$\mathrm{\AA}$")
-    ax[0].plot(gs, color="b", label="0.5-4$\mathrm{\AA}$")
+    ax[0].plot(gl, color="tab:red", label="1-8 $\mathrm{\AA}$")
+    ax[0].plot(gs, color="tab:blue", label="0.5-4 $\mathrm{\AA}$")
     ax[0].set_ylabel("Flux (Wm$^{-2}$)")
     ax[0].legend(loc="upper left")
     ax[0].set_yscale("log")
@@ -75,14 +82,14 @@ def plot_flare(i):
     ax[1].legend(loc="upper left")      
 
     for a in ax:
-        a.axvline(gl_flare.index[np.argmax(gl_flare)], color="r", lw=0.4)
-        a.axvline(gs_flare.index[np.argmax(gs_flare)], color="b", lw=0.4)
+        a.axvline(gl_flare.index[np.argmax(gl_flare)], color="tab:red", lw=0.4)
+        a.axvline(gs_flare.index[np.argmax(gs_flare)], color="tab:blue", lw=0.4)
         a.axvline(pd.to_datetime(vlf_flares["event_starttime"].iloc[i]), ls="dashed", color="grey")
         a.axvline(pd.to_datetime(vlf_flares["event_endtime"].iloc[i]), ls="dashed", color="grey")
         a.axvline(sid_resample_flare.index[np.argmax(sid_resample_flare)], color="k", lw=0.4)
 
     tstart_str = pd.to_datetime(vlf_flares["event_starttime"].iloc[i]).strftime("%Y-%m-%dT%H:%M")
-    ax[1].set_xlabel("Time {:s}".format(pd.to_datetime(vlf_flares["event_starttime"].iloc[i]).strftime("%Y-%m-%d %H:%M")))
+    ax[1].set_xlabel("Time {:s} UT".format(pd.to_datetime(vlf_flares["event_starttime"].iloc[i]).strftime("%Y-%m-%d %H:%M")))
     ax[1].xaxis.set_major_formatter(dates.DateFormatter("%H:%M"))
     ax[1].set_xlim(gl.index[0], gl.index[-1])
     ax[1].tick_params(which="both", direction="in")
@@ -93,7 +100,7 @@ def plot_flare(i):
     ax[1].xaxis.set_minor_locator(dates.MinuteLocator(interval=1))
 
     plt.subplots_adjust(hspace=0.01)
-    plt.savefig("./paper_plots/example_flare_ana.png", dpi=300, facecolor="w", bbox_inches="tight")
+    plt.savefig("./final_paper_plots/example_flare_ana.png", dpi=300, facecolor="w", bbox_inches="tight")
     plt.close()
 
 

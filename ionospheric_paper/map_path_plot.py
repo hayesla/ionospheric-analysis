@@ -11,7 +11,15 @@ sns.set_context("paper", font_scale=1.3)
 # projection=ccrs.PlateCarree()
 # #hacked_proj = projection
 # projection._threshold /= 20.
+sns.set_context("paper", font_scale=1.5)
+plt.rcParams['xtick.direction'] = "in"
+plt.rcParams['ytick.direction'] = "in"
+plt.rcParams['xtick.minor.visible'] = True
+plt.rcParams['ytick.minor.visible'] = True
 
+
+plt.rcParams['font.family'] = 'Helvetica'
+cmap_paper = plt.cm.viridis
 
 point_colors = "blue"
 img_colors = False
@@ -70,5 +78,5 @@ ax.plot([naa_lon, birr_lon], [naa_lat, birr_lat],
 ax.set_xlabel("Longitude")
 ax.set_ylabel("Latitude")
 plt.tight_layout()
-plt.savefig("map_of_path.png", dpi=200)
+plt.savefig("./final_paper_plots/map_of_path.png", dpi=300, bbox_inches="tight")
 plt.close()
