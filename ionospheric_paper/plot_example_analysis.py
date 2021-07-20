@@ -54,7 +54,7 @@ def plot_flare(i):
 
     # smoothing window defined in terms of cadence
     window_sec =  (sid_data.index[1] - sid_data.index[0]).total_seconds()
-    window = int((3*60)/window_sec)
+    window = int((2*60)/window_sec)
     if window%2 == 0:
         window = window+1
 
@@ -77,8 +77,8 @@ def plot_flare(i):
     ax[0].legend(loc="upper left")
     ax[0].set_yscale("log")
 
-    ax[1].plot(sid_data_db - sid_data_db[0], label="VLF amp", color="grey")
-    ax[1].plot(sid_resample_flare_db - sid_resample_flare_db[0], label="Smoothed VLF amp", color="k")
+    ax[1].plot(sid_data_db - sid_data_db[0], label="VLF amp", color="grey", lw=0.7)
+    ax[1].plot(sid_resample_db - sid_data_db[0], label="Smoothed VLF amp", color="k")
     ax[1].legend(loc="upper left")      
 
     for a in ax:
@@ -108,3 +108,6 @@ def plot_flare(i):
 
 # plot the 2012-11-20 12:36 flare
 plot_flare(15)
+
+# plot the 2015-10-02 15:26 flare
+# plot_flare(262)

@@ -43,11 +43,31 @@ sid_data = sid_to_series(vlf_file)
 sid_data_quiet = sid_to_series(vlf_quiet)
 sid_data_quiet.index = sid_data_quiet.index - datetime.timedelta(days=4)
 
-
 def calc_amp(x):
 	return 20*np.log10(x + 5) - 61 + 107
 
-def make_paper_plot(sid_data, sid_data_quiet, amp=False):
+flare_class = ['C8.1', 
+		       'M1.0', 
+		       'C8.8', 
+		       'C7.2', 
+		       'M1.0',
+		       'C3.0']
+
+flare_times = ['2015-10-02 18:05',
+		       '2015-10-02 17:18',
+		       '2015-10-02 15:32',
+		       '2015-10-02 13:37',
+		       '2015-10-02 12:26',
+		       '2015-10-02 11:40']
+
+sid_peaks = [58, 60, 61.5, 61.5, 61.5, 58.5]
+
+# ids = [sid_data.index.get_loc(flare_times[i], method='nearest').start for i in range(len(flare_times))]
+# sid_peaks = calc_amp(sid_data[ids].values)
+
+
+
+def make_paper_plot(sid_data, sid_data_quiet, amp=False, annotate=False):
 	"""
 	Make plot of example flare day for paper
 	if amp is True, the vlf amplitude is plotted in db rather than volts
@@ -65,6 +85,7 @@ def make_paper_plot(sid_data, sid_data_quiet, amp=False):
 	ax1.plot(gs, color="tab:blue", label="0.5-4 $\mathrm{\AA}$")
 	ax1.set_yscale("log")
 	ax1.set_ylim(1e-8, 4e-4)
+	ax1.set_yticks((1e-8, 1e-7, 1e-6, 1e-5, 1e-4))
 	ax1.set_ylabel("Flux Wm$^{-2}$")
 	ax1.tick_params(which="both", labelbottom=False)
 	ax1_rhs = ax1.twinx()
@@ -74,8 +95,8 @@ def make_paper_plot(sid_data, sid_data_quiet, amp=False):
 	ax1_rhs.set_yticks((1e-8, 1e-7, 1e-6, 1e-5, 1e-4))
 	ax1_rhs.set_yticklabels(('A', 'B', 'C', 'M', 'X'))
 
-	ax1.yaxis.grid(True, 'major')
-	ax1.xaxis.grid(False, 'major')
+	ax1.yaxis.grid(True, 'major', lw=0.2)
+	ax1.xaxis.grid(True, 'major', lw=0.2)
 	ax1.legend(loc="upper right")
 
 	ax2.plot(sid_data_quiet, color="grey", lw=0.5, label="Quiet day")
@@ -84,7 +105,10 @@ def make_paper_plot(sid_data, sid_data_quiet, amp=False):
 
 	ax2.set_xlim(tstart, tend)
 	ax2.xaxis.set_major_formatter(dates.DateFormatter("%H:%M"))
-	ax2.yaxis.grid(True, "major")
+	ax2.yaxis.grid(True, "major", lw=0.2)
+
+	ax2.xaxis.grid(True, 'major', lw=0.2)
+
 
 	if amp:
 		ax2.set_ylim(35, 68)
@@ -100,15 +124,20 @@ def make_paper_plot(sid_data, sid_data_quiet, amp=False):
 	ax1.text(0.01, 0.91, "a. Solar X-ray Observations", transform=ax1.transAxes)
 	ax2.text(0.01, 0.95, "b. Ionospheric VLF Observations", transform=ax2.transAxes)
 
+	if annotate:
+		for i in range(len(flare_times)):
+			a.text(flare_times[i], sid_peaks[i]+1, flare_class[i])
 
 	plt.tight_layout()
 	plt.subplots_adjust(hspace=0.01)
-	if amp:
+	if amp and annotate:
+		plt.savefig("./final_paper_plots/example_active_day_ann.png", dpi=300, bbox_inches="tight")
+	elif amp:
 		plt.savefig("./final_paper_plots/example_active_day.png", dpi=300, bbox_inches="tight")
 	else:
 		plt.savefig("./final_paper_plots/example_active_day2.png", dpi=300, bbox_inches="tight")
 	plt.close()
 
 # make plots 
-make_paper_plot(sid_data, sid_data_quiet)
-make_paper_plot(sid_data, sid_data_quiet, amp=True)
+# make_paper_plot(sid_data, sid_data_quiet)
+# make_paper_plot(sid_data, sid_data_quiet, amp=True)
