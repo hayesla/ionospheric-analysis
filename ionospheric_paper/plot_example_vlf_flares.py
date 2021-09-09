@@ -86,7 +86,7 @@ def make_paper_plot(sid_data, sid_data_quiet, amp=False, annotate=False):
 	ax1.set_yscale("log")
 	ax1.set_ylim(1e-8, 4e-4)
 	ax1.set_yticks((1e-8, 1e-7, 1e-6, 1e-5, 1e-4))
-	ax1.set_ylabel("Flux Wm$^{-2}$")
+	ax1.set_ylabel("Flux [Wm$^{-2}$]")
 	ax1.tick_params(which="both", labelbottom=False)
 	ax1_rhs = ax1.twinx()
 
@@ -112,10 +112,10 @@ def make_paper_plot(sid_data, sid_data_quiet, amp=False, annotate=False):
 
 	if amp:
 		ax2.set_ylim(35, 68)
-		ax2.set_ylabel("VLF Amplitude (dB)")
+		ax2.set_ylabel("VLF Amplitude [dB]")
 	else:
 		ax2.set_ylim(-5, 5)
-		ax2.set_ylabel("VLF Amplitude (volts)")
+		ax2.set_ylabel("VLF Amplitude [volts]")
 
 	ax2.set_xlabel("Time {:s} (UT)".format(gl.index[100].strftime("%Y-%m-%d")))
 	for a in (ax1, ax2):

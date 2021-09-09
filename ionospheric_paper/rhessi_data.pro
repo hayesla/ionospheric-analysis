@@ -1,7 +1,9 @@
 pro get_data_hsi
 
-tstart = "2013-05-22 13:00"
+tstart = "2013-05-22 12:00"
 tend = "2013-05-22 14:00"
+
+search_network, /enable
 
 o = hsi_obs_summary()
 o-> set, obs_time_interval = [tstart, tend]

@@ -117,12 +117,13 @@ def plot_atten_states(aa, y_val, color = 'r'):
 	for i in range(len(aa)):
 		plt.plot([aa[i][0], aa[i][1]], [y_val, y_val], color = color)
 
-mask = np.logical_and(rhe.index < aa_0[0][1], rhe.index> aa_0[0][0])
-for i in range(1, len(aa_0)):
-	mask = mask + np.logical_and(rhe.index < aa_0[i][1], rhe.index > aa_0[i][0])
-	
-for i in range(0, 4):
-	mask = mask + np.logical_and(rhe.index < aa_1[i][1], rhe.index > aa_1[i][0])
+mask = np.logical_and(rhe.index <=aa_1[0][1], rhe.index>=(aa_1[0][0]+datetime.timedelta(seconds=60)))
+for i in range(1, len(aa_1)):
+	mask = mask + np.logical_and(rhe.index <= aa_1[i][1], rhe.index >= (aa_1[i][0]+datetime.timedelta(seconds=60)))
+mask = [np.nan if x==0 else 1 for x in mask]
 
+plt.plot(rhe["25-50 keV"]*mask, marker='.')
+
+fixed_rhe = rhe["25-50 keV"]*mask
 
 

@@ -73,7 +73,7 @@ def plot_flare(i):
     fig, ax = plt.subplots(2, figsize=(8,6), sharex=True)
     ax[0].plot(gl, color="tab:red", label="1-8 $\mathrm{\AA}$")
     ax[0].plot(gs, color="tab:blue", label="0.5-4 $\mathrm{\AA}$")
-    ax[0].set_ylabel("Flux (Wm$^{-2}$)")
+    ax[0].set_ylabel("Flux [Wm$^{-2}$]")
     ax[0].legend(loc="upper left")
     ax[0].set_yscale("log")
 
@@ -94,7 +94,7 @@ def plot_flare(i):
     ax[1].set_xlim(gl.index[0], gl.index[-1])
     ax[1].tick_params(which="both", direction="in")
     ax[0].tick_params(which="both", direction="in")
-    ax[1].set_ylabel("VLF amplitude excess (db)")
+    ax[1].set_ylabel("VLF amplitude excess [db]")
     plt.tight_layout()
     ax[1].xaxis.set_major_locator(dates.MinuteLocator(byminute=[35, 40, 45, 50]))
     ax[1].xaxis.set_minor_locator(dates.MinuteLocator(interval=1))
